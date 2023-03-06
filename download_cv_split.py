@@ -20,7 +20,7 @@ logging.basicConfig(
     ]
 )
 
-_BUNDLE_URL_TEMPLATE_DELTA = 'cv-corpus-12.0-delta-2022-12-07/cv-corpus-12.0-delta-2022-12-07-{locale}.tar.gz'
+_BUNDLE_URL_TEMPLATE_DELTA = 'cv-corpus-12.0-2022-12-07/cv-corpus-12.0-2022-12-07-{locale}.tar.gz'
 _BUNDLE_VERSION = _BUNDLE_URL_TEMPLATE_DELTA.split("/")[0]
 _API_URL = "https://commonvoice.mozilla.org/api/v1"
 
@@ -33,7 +33,7 @@ def _get_bundle_url(locale, url_template):
 
 
 def _log_download(locale, bundle_version):
-    email = "polina@huggingface.co"
+    email = "vaibhav@huggingface.co"
     payload = {"email": email, "locale": locale, "dataset": bundle_version}
     requests.post(f"{_API_URL}/{locale}/downloaders", json=payload).json()
 
@@ -62,8 +62,8 @@ def download_language(dl_manager, lang, root_dir):
 
 def main():
     root_dir = Path("")
-    with open("langs.json", "r") as f:
-        languages = json.load(f).keys()
+    with open("cv-corpus-12.0-2022-12-07.json", "r") as f:
+        languages = json.load(f)["locales"].keys()
 
     if (root_dir / "langs_ok.txt").exists():
         with open(root_dir / "langs_ok.txt") as f:
