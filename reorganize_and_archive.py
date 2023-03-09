@@ -38,6 +38,7 @@ def extract_archive(archive_path, target_dir):
     with tarfile.open(archive_path, 'r:gz') as f:
         f.extractall(path=target_dir)
 
+def main():
     with open("cv-corpus-12.0-2022-12-07.json", "r") as f:
         languages = list(json.load(f)["locales"].keys())
 
