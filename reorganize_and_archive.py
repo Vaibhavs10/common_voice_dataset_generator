@@ -11,8 +11,14 @@ import csv
 from functools import partial
 from multiprocessing import Pool
 
-
-logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s: %(message)s',
+    level=logging.INFO,
+    handlers=[
+        logging.FileHandler("cv12_org.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 
 
 files_per_archive = 40_000
@@ -32,41 +38,12 @@ def extract_archive(archive_path, target_dir):
     with tarfile.open(archive_path, 'r:gz') as f:
         f.extractall(path=target_dir)
 
+    with open("cv-corpus-12.0-2022-12-07.json", "r") as f:
+        languages = list(json.load(f)["locales"].keys())
 
-def main():
-    # langs = ["ab", "ar", "as", "ast"]
-    # langs = ["az"]
-    # langs = ["ba"]
-    # langs = ["bas", "be", "bg", "bn", "br"]
-    # langs = ["ca", "ckb", "en", "eo", "eu", "fr"]
-    # langs = ["hy-AM"]
-    # langs = ["rw", "th", "yue", "zh-CN"]
-    # langs = ["zh-HK", "zh-TW", "cv"]
-    # langs = ["cs", "da", "dv", "nl", "myv", "et", "fi", "fy-NL", "gl", ]
-    # langs = ["ka", "el", "gn", "cnh", "ha", "mrj", "hi", "ig", "id", "ia", "ga-IE", "it"]
-    # langs = ["ja", "kab", ]
-    # langs = ["kk", "kmr", "ky", "lg", "fa", "es"]
-    # langs = ["cy", "vi", "uz", "ug"]
-    # langs = ["ur", "uk", "tw", "tr", "tok", "ti"] +\
-    #         ["tig", "tt", "ta", "nan-tw", "sv-SE", "sw", "hsb", "sl", "sk", "sr"] + \
-    #         ["sc", "skr", "sat", "sah", "ru", ]
-    # langs = ["rm-sursilv", "ro", "pa-IN", "pt"] + \
-    #         ["pl", "or", "ne-NP", "mn", "mdf", "mhr", "mr", "mt", "ml", "mk", "lt", "nn-NO", "rm-vallader", "lv"]
-    # langs = ['hu', 'vot']
-    langs = ["ab"]
     for lang in tqdm(langs, desc="languages"):
-        # extract = True
-        # logging.info(f"Language: {lang.upper()}, files per tar: {files_per_archive}")
-        # orig_archive_path = f"/home/polina_huggingface_co/data/cv11/{lang}.tar.gz"
-        # if extract:
-        #     logging.info("Extracting original archive...")
-        #     extract_archive(orig_archive_path, target_dir="/home/polina_huggingface_co/data/cv11/")
-        #     logging.info("Extracted.")
 
         clip_path = f"/home/vaibhav_huggingface_co/common_voice_dataset_generator/data/{lang}/cv-corpus-12.0-2022-12-07/{lang}/clips"
-        # data_size = sum(f.stat().st_size for f in Path(clip_path).glob('*.mp3') if f.is_file())
-        # data_size_gb = data_size / 1024 ** 3
-        # num_procs = min(int(data_size_gb) + 2, 28)
 
         splits = ("test", "dev", "train", "other", "invalidated")
 
