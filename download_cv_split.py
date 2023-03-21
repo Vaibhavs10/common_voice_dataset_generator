@@ -20,10 +20,13 @@ logging.basicConfig(
     ]
 )
 
+#Step 1: Update the BUNDLE URL -> You can get this by trying to manually download a split and looking for the download URL.
 _BUNDLE_URL_TEMPLATE_DELTA = 'cv-corpus-13.0-2023-03-09/cv-corpus-13.0-2023-03-09-{locale}.tar.gz'
 _BUNDLE_VERSION = _BUNDLE_URL_TEMPLATE_DELTA.split("/")[0]
 _API_URL = "https://commonvoice.mozilla.org/api/v1"
 
+#Step 2: Place the path to the CV release JSON from https://github.com/common-voice/cv-dataset/tree/main/datasets
+_CV_DATASET_RELEASE_JSON = "cv-corpus-13.0-2023-03-09.json"
 
 def _get_bundle_url(locale, url_template):
     path = url_template.replace("{locale}", locale)
@@ -62,7 +65,7 @@ def download_language(dl_manager, lang, root_dir):
 
 def main():
     root_dir = Path("")
-    with open("cv-corpus-13.0-2023-03-09.json", "r") as f:
+    with open(_CV_DATASET_RELEASE_JSON, "r") as f:
         languages = json.load(f)["locales"].keys()
 
     if (root_dir / "langs_ok.txt").exists():
