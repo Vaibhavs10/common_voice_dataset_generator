@@ -15,12 +15,12 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s: %(message)s',
     level=logging.INFO,
     handlers=[
-        logging.FileHandler("cv12_download.log"),
+        logging.FileHandler("cv13_download.log"),
         logging.StreamHandler(sys.stdout)
     ]
 )
 
-_BUNDLE_URL_TEMPLATE_DELTA = 'cv-corpus-12.0-2022-12-07/cv-corpus-12.0-2022-12-07-{locale}.tar.gz'
+_BUNDLE_URL_TEMPLATE_DELTA = 'cv-corpus-13.0-2023-03-09/cv-corpus-13.0-2023-03-09-{locale}.tar.gz'
 _BUNDLE_VERSION = _BUNDLE_URL_TEMPLATE_DELTA.split("/")[0]
 _API_URL = "https://commonvoice.mozilla.org/api/v1"
 
@@ -62,7 +62,7 @@ def download_language(dl_manager, lang, root_dir):
 
 def main():
     root_dir = Path("")
-    with open("cv-corpus-12.0-2022-12-07.json", "r") as f:
+    with open("cv-corpus-13.0-2023-03-09.json", "r") as f:
         languages = json.load(f)["locales"].keys()
 
     if (root_dir / "langs_ok.txt").exists():
