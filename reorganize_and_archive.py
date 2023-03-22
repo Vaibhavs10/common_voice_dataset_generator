@@ -5,7 +5,8 @@ import pandas
 from tqdm import tqdm
 import tarfile
 import logging
-import os
+import sys
+import json
 from pathlib import Path
 import csv
 from functools import partial
@@ -15,7 +16,7 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s: %(message)s',
     level=logging.INFO,
     handlers=[
-        logging.FileHandler("cv12_org.log"),
+        logging.FileHandler("cv13_org.log"),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -39,18 +40,20 @@ def extract_archive(archive_path, target_dir):
         f.extractall(path=target_dir)
 
 def main():
-    with open("cv-corpus-12.0-2022-12-07.json", "r") as f:
-        languages = list(json.load(f)["locales"].keys())
+    with open("cv-corpus-13.0-2023-03-09.json", "r") as f:
+        langs = list(json.load(f)["locales"].keys())
 
     for lang in tqdm(langs, desc="languages"):
 
-        clip_path = f"/home/vaibhav_huggingface_co/common_voice_dataset_generator/data/{lang}/cv-corpus-12.0-2022-12-07/{lang}/clips"
+        logging.info(f"Starting language: {lang}")
+
+        clip_path = f"/home/vaibhav_huggingface_co/common_voice_dataset_generator/data/{lang}/cv-corpus-13.0-2023-03-09/{lang}/clips"
 
         splits = ("test", "dev", "train", "other", "invalidated")
 
         for split in splits:
-            meta_path = f"/home/vaibhav_huggingface_co/common_voice_dataset_generator/data/{lang}/cv-corpus-12.0-2022-12-07/{lang}/{split}.tsv"
-            new_meta_dir = f"repos/common_voice_11_0/transcript/{lang}/"
+            meta_path = f"/home/vaibhav_huggingface_co/common_voice_dataset_generator/data/{lang}/cv-corpus-13.0-2023-03-09/{lang}/{split}.tsv"
+            new_meta_dir = f"repos/common_voice_13_0/transcript/{lang}/"
             Path(new_meta_dir).mkdir(parents=True, exist_ok=True)
 
             data = pandas.read_csv(meta_path, sep='\t', quoting=csv.QUOTE_NONE, low_memory=False)
@@ -65,7 +68,7 @@ def main():
 
             logging.info(f"split: {split.upper()}, num_files: {num_files}")
 
-            new_clip_path = f"repos/common_voice_11_0/audio/{lang}/{split}"
+            new_clip_path = f"repos/common_voice_13_0/audio/{lang}/{split}"
             Path(new_clip_path).mkdir(parents=True, exist_ok=True)
 
             file_groups = [
@@ -95,6 +98,8 @@ def main():
                     lang=lang,
                     split=split,
                 )
+
+            logging.info(f"Done with language: {lang}")
 
 
 if __name__ == "__main__":
